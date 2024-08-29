@@ -301,7 +301,7 @@ func coraza_process_response_headers(t *C.coraza_transaction_t, status C.int, pr
 }
 
 //export coraza_rules_add_file
-func coraza_rules_add_file(wrapper *C.coraza_waf_t, file *C.char) {
+func coraza_rules_add_file(wrapper *C.coraza_config_t, file *C.char) {
 	inner := (*corazaConfigInner)(wrapper.inner)
 	inner.config = inner.config.WithDirectivesFromFile(C.GoString(file))
 }
