@@ -1,3 +1,8 @@
+v0.2 - 2024-09-29
+  * cmake build system
+  * cmake test
+  * api using Pinner instead of map
+
 v0.1 - YYYY-MM-dd
 -----------------
   * Added autotools mechanism
