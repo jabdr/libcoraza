@@ -37,7 +37,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GO_LIB} ${CMAKE_CURRENT_
 add_custom_target(libcoraza_static DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GO_LIB} ${CMAKE_CURRENT_BINARY_DIR}/${GO_HEADER})
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coraza/${OUTPUT_HEADER}
-  DEPENDS libcoraza_static
+  DEPENDS libcoraza_static ${CMAKE_CURRENT_BINARY_DIR}/${GO_HEADER}
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${GO_HEADER} ${CMAKE_CURRENT_BINARY_DIR}/coraza/${OUTPUT_HEADER}
   COMMENT "Copy header to destination")
 
@@ -64,6 +64,7 @@ set(DOXYGEN_GENERATE_MAN YES)
 set(DOXYGEN_FILE_PATTERNS .h)
 set(DOXYGEN_TOC_INCLUDE_HEADINGS 5)
 doxygen_add_docs(docs ${CMAKE_CURRENT_BINARY_DIR} ALL)
+set_target_properties(docs PROPERTIES DEPENDS coraza_header)
 
 add_executable(simple_get_shared tests/simple_get.c)
 target_link_libraries(simple_get_shared coraza)
