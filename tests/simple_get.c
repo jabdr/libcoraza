@@ -72,7 +72,8 @@ int main()
         free(err);
         return 1;
     }
-    coraza_free_waf(waf);
     coraza_free_intervention(intervention);
+    coraza_free_waf(waf);
+    coraza_free_config(cfg);
     return 0;
 }

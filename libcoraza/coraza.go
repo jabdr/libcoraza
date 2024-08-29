@@ -10,6 +10,7 @@ package main
 typedef struct coraza_intervention_t
 {
 	char *action;
+	char *data;
     int status;
     int pause;
     int disruptive;
@@ -183,13 +184,19 @@ func allocIntervention() *C.coraza_intervention_t {
 func coraza_intervention(wrapper *C.coraza_transaction_t) *C.coraza_intervention_t {
 	tx := (*innerTranscation)(wrapper.inner).tx
 
-	if tx.Interruption() == nil {
+	it := tx.Interruption()
+
+	if it == nil {
 		return nil
 	}
 
 	mem := allocIntervention()
-	mem.action = C.CString(tx.Interruption().Action)
-	mem.status = C.int(tx.Interruption().Status)
+	mem.action = C.CString(it.Action)
+	mem.status = C.int(it.Status)
+	if it.Data != "" {
+		mem.data = C.CString(it.Data)
+	}
+	mem.disruptive = 1
 	return mem
 }
 
@@ -333,6 +340,9 @@ func coraza_free_transaction(tx *C.coraza_transaction_t, cerr **C.char) C.int {
 func coraza_free_intervention(it *C.coraza_intervention_t) {
 	if it.action != nil {
 		freeC(unsafe.Pointer(it.action))
+	}
+	if it.data != nil {
+		freeC(unsafe.Pointer(it.data))
 	}
 	freeC(unsafe.Pointer(it))
 }
