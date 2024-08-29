@@ -17,6 +17,7 @@ endif()
 project(libcoraza VERSION ${PROJECT_VERSION})
 
 include(GNUInstallDirs)
+include(CTest)
 
 find_program(GO_BIN NAMES go REQUIRED)
 find_package(Doxygen REQUIRED)
@@ -71,6 +72,16 @@ target_link_libraries(simple_get_shared coraza)
 
 add_executable(simple_get_static tests/simple_get.c)
 target_link_libraries(simple_get_static coraza_static)
+
+add_test(NAME simple_get_static COMMAND simple_get_static)
+set(TEST simple_get_static PROPERTY PASS_REGULAR_EXPRESSION "Transaction disrupted with status 403")
+
+add_test(NAME simple_get_shared COMMAND simple_get_shared)
+set(TEST simple_get_shared PROPERTY PASS_REGULAR_EXPRESSION "Transaction disrupted with status 403")
+
+add_test(NAME go
+         COMMAND ${GO_BIN} test ${CMAKE_CURRENT_SOURCE_DIR}/libcoraza/...)
+set(TEST go PROPERTY FAIL_REGULAR_EXPRESSION  "^FAIL")
 
 install(TARGETS coraza)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/coraza/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/coraza)
